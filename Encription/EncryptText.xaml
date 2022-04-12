@@ -1,25 +1,32 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="Main" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:this="clr-namespace:" xmlns:uca="clr-namespace:UiPath.Cryptography.Activities;assembly=UiPath.Cryptography.Activities" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="Main" this:Main.in_encryptionAlgorithm="[{&quot;AES (Deprecated)&quot;, &quot;AES GCM&quot;, &quot;DES (Deprecated)&quot;, &quot;RC2 (Non-FIPS) (Deprecated)&quot;, &quot;Rijndael (Non-FIPS) (Deprecated)&quot;, &quot;TripleDES&quot;}]" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:sc="clr-namespace:System.Collections;assembly=mscorlib" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:this="clr-namespace:" xmlns:uca="clr-namespace:UiPath.Cryptography.Activities;assembly=UiPath.Cryptography.Activities" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
-    <x:Property Name="in_inputText" Type="InArgument(x:String)" />
-    <x:Property Name="out_encryptedText" Type="InArgument(x:String)" />
-    <x:Property Name="in_EncryptionKeyAssetName" Type="InArgument(x:String)" />
+    <x:Property Name="in_inputText" Type="InArgument(x:String)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="out_encryptedText" Type="OutArgument(x:String)" />
+    <x:Property Name="in_encryptionAlgorithm" Type="InArgument(sc:IEnumerable)" />
+    <x:Property Name="out_exceptionMessage" Type="OutArgument(x:String)" />
+    <x:Property Name="in_encryptionKeyAssetName" Type="InArgument(x:String)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
   </x:Members>
   <this:Main.in_inputText>
     <InArgument x:TypeArguments="x:String" />
   </this:Main.in_inputText>
-  <this:Main.out_encryptedText>
+  <this:Main.in_encryptionKeyAssetName>
     <InArgument x:TypeArguments="x:String" />
-  </this:Main.out_encryptedText>
-  <this:Main.in_EncryptionKeyAssetName>
-    <InArgument x:TypeArguments="x:String" />
-  </this:Main.in_EncryptionKeyAssetName>
+  </this:Main.in_encryptionKeyAssetName>
   <mva:VisualBasic.Settings>
     <x:Null />
   </mva:VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>824,1256.8</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>824,1320.8</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
-    <scg:List x:TypeArguments="x:String" Capacity="29">
+    <scg:List x:TypeArguments="x:String" Capacity="58">
       <x:String>System.Activities</x:String>
       <x:String>System.Activities.Statements</x:String>
       <x:String>System.Activities.Expressions</x:String>
@@ -49,10 +56,11 @@
       <x:String>System.Reflection</x:String>
       <x:String>System.Runtime.InteropServices</x:String>
       <x:String>System.Runtime.Serialization</x:String>
+      <x:String>System.Web.UI.WebControls</x:String>
     </scg:List>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
-    <scg:List x:TypeArguments="AssemblyReference" Capacity="18">
+    <scg:List x:TypeArguments="AssemblyReference" Capacity="36">
       <AssemblyReference>System.Activities</AssemblyReference>
       <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
@@ -71,9 +79,19 @@
       <AssemblyReference>UiPath.Cryptography</AssemblyReference>
       <AssemblyReference>UiPath.Cryptography.Activities</AssemblyReference>
       <AssemblyReference>System.Memory</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>Microsoft.Bcl.AsyncInterfaces</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.OCR.Activities.Design</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>UiPath.UIAutomationCore</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities.Design</AssemblyReference>
+      <AssemblyReference>System.Web</AssemblyReference>
     </scg:List>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap2010:Annotation.AnnotationText="Encrption of text using the encryption key stored in Assets.&#xD;&#xA;&#xD;&#xA;This library expects text, which needs to be encrypted and encryption key as String. It will povide the encrypted Text output as String.&#xD;&#xA;&#xD;&#xA;Argumets:&#xD;&#xA;in_inputText, in_key and out_encryptedText" DisplayName="Encrypt text" sap:VirtualizedContainerService.HintSize="563.2,1092" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap2010:Annotation.AnnotationText="Encrption of text using the encryption key stored in Assets.&#xA;&#xA;This library expects text, which needs to be encrypted and encryption key as String. It will povide the encrypted Text output as String.&#xA;&#xD;&#xA;Pre-Conditions: in_inputText and in_key arguments are mandetory&#xD;&#xA;Post-Conditions: check if 'out_ExceptionMessage' is nothing to make sure there was no exception encountered during the executon&#xD;&#xA;&#xA;Argumets:&#xA;in_inputText, in_key, out_encryptedText and out_ExceptionMessage" DisplayName="Encrypt text" sap:VirtualizedContainerService.HintSize="563.2,1156" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Name="encryptionKey" />
     </Sequence.Variables>
@@ -83,10 +101,16 @@
         <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="521.6,92.8" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[&quot;Starting the encryption process of the input Text.&quot;]" />
+    <ui:LogMessage DisplayName="Log Message - Begin Encrypt text Library" sap:VirtualizedContainerService.HintSize="521.6,92.8" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[&quot;Starting the encryption process of the input Text.&quot;]" />
     <TryCatch DisplayName="Try Catch - Encrypt text" sap:VirtualizedContainerService.HintSize="521.6,742.4" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
       <TryCatch.Try>
-        <Sequence sap:VirtualizedContainerService.HintSize="484.8,511.2" sap2010:WorkflowViewState.IdRef="Sequence_3">
+        <Sequence DisplayName="Execute encryption" sap:VirtualizedContainerService.HintSize="484.8,511.2" sap2010:WorkflowViewState.IdRef="Sequence_3">
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -97,8 +121,8 @@
               <OutArgument x:TypeArguments="x:String">[encryptionKey]</OutArgument>
             </ui:GetRobotAsset.Value>
           </ui:GetRobotAsset>
-          <uca:EncryptText Algorithm="AESGCM" DisplayName="Encryption of Text" Encoding="[System.Text.Encoding.UTF8]" sap:VirtualizedContainerService.HintSize="443.2,106.4" sap2010:WorkflowViewState.IdRef="EncryptText_1" Input="[in_inputText]" Key="[encryptionKey]" Result="[out_EncryptedText]" />
-          <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="443.2,92.8" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="Info" Message="[&quot;The text value has bee encrypted.&quot;]" />
+          <uca:EncryptText Algorithm="AESGCM" DisplayName="Encryption of Text - AES GCM" Encoding="[System.Text.Encoding.UTF8]" sap:VirtualizedContainerService.HintSize="443.2,106.4" sap2010:WorkflowViewState.IdRef="EncryptText_1" Input="[in_inputText]" Key="[encryptionKey]" Result="[out_EncryptedText]" />
+          <ui:LogMessage DisplayName="Log Message - Successful Encryption" sap:VirtualizedContainerService.HintSize="443.2,92.8" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="Info" Message="[&quot;The text value has bee encrypted.&quot;]" />
         </Sequence>
       </TryCatch.Try>
       <TryCatch.Catches>
@@ -113,16 +137,21 @@
             <ActivityAction.Argument>
               <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
             </ActivityAction.Argument>
-            <Sequence sap:VirtualizedContainerService.HintSize="375.2,248" sap2010:WorkflowViewState.IdRef="Sequence_2">
-              <Sequence.Variables>
-                <Variable x:TypeArguments="x:String" Name="out_ExceptionMessage" />
-              </Sequence.Variables>
+            <Sequence sap:VirtualizedContainerService.HintSize="375.2,348" sap2010:WorkflowViewState.IdRef="Sequence_2">
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
                   <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
-              <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="333.6,92.8" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Error" Message="[&quot;Exception enountered in Ecrypt Library. Exception Message: &quot; + exception.Message]" />
+              <Assign DisplayName="Assign Exception message in TryCatch Encrypt text" sap:VirtualizedContainerService.HintSize="333.6,60" sap2010:WorkflowViewState.IdRef="Assign_1">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">[out_ExceptionMessage]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">["Exception enountered in Ecrypt Library. Exception Message: " + exception.Message]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <ui:LogMessage DisplayName="Log Message - Exception in Encrypt text" sap:VirtualizedContainerService.HintSize="333.6,92.8" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Error" Message="[out_ExceptionMessage]" />
               <Rethrow DisplayName="Rethrow - Encrypt text" sap:VirtualizedContainerService.HintSize="333.6,22.4" sap2010:WorkflowViewState.IdRef="Rethrow_1" />
             </Sequence>
           </ActivityAction>
