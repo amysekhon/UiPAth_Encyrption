@@ -1,13 +1,10 @@
 {
   "name": "Cryptography",
-  "description": "Blank Library",
+  "description": "This is a custom library encrypts and decrypts text or file",
   "main": "NewActivity.xaml",
   "dependencies": {
     "UiPath.Cryptography.Activities": "1.2.1",
-    "UiPath.Excel.Activities": "2.10.2-preview",
-    "UiPath.Mail.Activities": "1.10.2-preview",
-    "UiPath.System.Activities": "21.2.1-preview",
-    "UiPath.UIAutomation.Activities": "21.2.0-preview"
+    "UiPath.System.Activities": "21.10.4"
   },
   "webServices": [],
   "entitiesStores": [],
